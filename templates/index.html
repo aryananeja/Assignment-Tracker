@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Assignment Tracker</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <div class="contsainer">
+        <h1>Assignment Tracker</h1>
+
+        <!-- Form for adding assignments -->
+        <form action="/" method="POST">
+            <div class="form-group">
+                <label for="name">Assignment Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="weightage">Weightage:</label>
+                <input type="number" id="weightage" name="weightage" required>
+            </div>
+
+            <div class="form-group">
+                <label for="due_date">Due Date:</label>
+                <input type="date" id="due_date" name="due_date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="time_taken">Time Taken (in hours):</label>
+                <input type="number" id="time_taken" name="time_taken" required>
+            </div>
+
+            <input type="submit" value="Add Assignment" class="btn-submit">
+        </form>
+
+        {% if assignments %}
+         <!-- Display the list of assignments if there are any -->
+        <h2>Assignments:</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Weightage</th>
+                <th>Due Date</th>
+                <th>Time Taken</th>
+            </tr>
+            {% for assignment in assignments %}
+            <tr>
+                <td>{{ assignment.name }}</td>
+                <td>{{ assignment.weightage }}</td>
+                <td>{{ assignment.due_date }}</td>
+                <td>{{ assignment.time_taken }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <!-- Form for deleting all assignments -->
+        <form action="/delete_all_assignments" method="post">
+            <button type="submit" class="btn-delete">Delete All Assignments</button>
+        </form>
+
+        <div class="suggested-assignment">
+            <h2>Suggested Assignment:</h2>
+            {% if suggested_assignments %}
+            <p>Based on your available study time, you should focus on the following assignment(s):</p>
+            <ul class="assignment-list">
+                {% for assignment in suggested_assignments %}
+                <li>{{ assignment.name }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No suggested assignments based on the available study time.</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+         <!-- Form for suggesting assignments based on available study time -->
+        <div class="study-time">
+            <h2>Enter your available study time:</h2>
+            <form action="/suggest_assignment" method="POST">
+                <div class="form-group">
+                    <label for="study_time">Study Time (in hours):</label>
+                    <input type="number" id="study_time" name="study_time" required>
+                </div>
+                <input type="submit" value="Suggest Assignment" class="btn-submit">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
